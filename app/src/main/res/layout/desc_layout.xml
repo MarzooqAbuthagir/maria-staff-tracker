@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:background="#80000000"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="Description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:ellipsize="marquee"
+                android:freezesText="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
+                android:scrollHorizontally="true"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:padding="5dp"
+                android:gravity="left"
+                android:hint="Check-In Description"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="11dp" />
+
+
+            <TextView
+                android:id="@+id/tv_checkindesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@null"
+                android:ellipsize="marquee"
+                android:freezesText="true"
+                android:gravity="start"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
+                android:scrollHorizontally="true"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:padding="5dp"
+                android:gravity="left"
+                android:hint="Check-Out Description"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/tv_checkoutdesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@null"
+                android:ellipsize="marquee"
+                android:freezesText="true"
+                android:gravity="start"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="5dp"
+                android:scrollHorizontally="true"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@drawable/sqrtop"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/closebtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:text="Close"
+                    android:textColor="@android:color/white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

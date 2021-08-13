@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lay_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e0e0e0"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/AppTheme"
+        app:title="Check-In History"
+        app:titleTextColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/layout_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_margin="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spin_executive"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"/>
+
+            <View
+                android:background="#e1e1e1"
+                android:layout_width="7dp"
+                android:layout_height="40dp"/>
+
+            <Spinner
+                android:id="@+id/spin_state"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_margin="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:id="@+id/date_layout"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:paddingLeft="10dp"
+                    android:id="@+id/date_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:focusableInTouchMode="false"
+                    android:text="From Date"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:maxLines="1" />
+
+                <ImageView
+                    android:id="@+id/ivClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:paddingRight="5dp"
+                    app:srcCompat="@drawable/ic_clear"
+                    android:visibility="gone"
+                    android:contentDescription="null" />
+
+
+                <ImageView
+                    android:id="@+id/ivDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:paddingRight="10dp"
+                    app:srcCompat="@drawable/ic_date"
+                    android:contentDescription="null" />
+
+            </LinearLayout>
+
+            <View
+                android:background="#e1e1e1"
+                android:layout_width="7dp"
+                android:layout_height="40dp"/>
+
+            <LinearLayout
+                android:id="@+id/to_date_layout"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:paddingLeft="10dp"
+                    android:id="@+id/to_date_txt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:focusableInTouchMode="false"
+                    android:text="To Date"
+                    android:imeOptions="actionNext"
+                    android:inputType="date"
+                    android:maxLines="1" />
+
+                <ImageView
+                    android:id="@+id/ivToClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:paddingRight="5dp"
+                    app:srcCompat="@drawable/ic_clear"
+                    android:visibility="gone"
+                    android:contentDescription="null" />
+
+
+                <ImageView
+                    android:id="@+id/ivToDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:paddingRight="10dp"
+                    app:srcCompat="@drawable/ic_date"
+                    android:contentDescription="null" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_margin="7dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:text="Clear Filter"/>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_margin="7dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:text="Submit"/>
+        </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_no_records"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:text="Not yet check-in"
+            android:textColor="#000"
+            android:textSize="18dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:visibility="gone" />
+</LinearLayout>
+

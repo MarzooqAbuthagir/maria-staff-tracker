@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">M Pub</string>
+
+    <string name="hintUserLogin">User Login</string>
+    <string name="hintMobNum">Mobile Number</string>
+    <string name="hintPassword">Password</string>
+    <string name="btnLogin">Login</string>
+
+    <string name="somethingwentwrong">Something went wrong</string>
+    <string name="nointernet">Check your Network Connection</string>
+    <string name="progresstitle">Loading... Please Wait</string>
+
+    <string name="logout_title">Logout</string>
+    <string name="logout_msg">Are you sure ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="gps_title">GPS is not Enabled!</string>
+    <string name="gps_msg">Do you want to turn on GPS?</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="ad_msg_ver">We have launched the new version in this application. So kindly update the App.</string>
+    <string name="ad_title_ver">NEW UPDATE AVAILABLE</string>
+
+    <string name="pickImage">
+        <u>Choose Expense Image</u>
+    </string>
+</resources>

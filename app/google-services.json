@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "450585523615",
+    "project_id": "maria1signal",
+    "storage_bucket": "maria1signal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450585523615:android:5fef351b6ecab469bd79aa",
+        "android_client_info": {
+          "package_name": "Com.mariapublishers.mariaexecutive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "450585523615-8274uukg28e43sf0c5pb13b067clfqt7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB5Hzs5V6y8rctakh-CT7h_JYJEBdZ3kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "450585523615-8274uukg28e43sf0c5pb13b067clfqt7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

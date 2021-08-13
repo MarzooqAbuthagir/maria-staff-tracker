@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_gravity="center"
+        android:background="@drawable/ic_maria_logo" />
+
+    <EditText
+        android:id="@+id/et_mob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="15dp"
+        android:background="@drawable/shape_edittext"
+        android:drawableStart="@drawable/ic_phone"
+        android:drawableTint="@color/black"
+        android:drawablePadding="15dp"
+        android:hint="Mobile Number"
+        android:inputType="phone"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textColorHighlight="@android:color/white"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <EditText
+        android:id="@+id/et_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="15dp"
+        android:background="@drawable/shape_edittext"
+        android:drawableStart="@drawable/ic_password"
+        android:drawablePadding="15dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:drawableTint="@color/black"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textColorHighlight="@android:color/white"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        android:shadowColor="@android:color/transparent"
+        android:padding="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp"
+        android:textColor="@color/white"
+        android:background="@drawable/shape_button"/>
+
+</LinearLayout>
+</ScrollView>
