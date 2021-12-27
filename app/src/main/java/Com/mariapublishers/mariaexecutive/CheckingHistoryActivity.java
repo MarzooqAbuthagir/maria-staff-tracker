@@ -237,7 +237,11 @@ public class CheckingHistoryActivity extends AppCompatActivity {
         String[] payType = { "Select Payment Type", "Cheque", "Cash", "NEFT / RTGS"};
         String selectedItemPayType="";
 
-        RadioButton radioButton;
+        Spinner spinDrivingType;
+        String[] drivingType = {"Select Driving Type", "Two Wheeler", "Car", "Public Transport"};
+        String selectedItemDrivingType = "";
+
+//        RadioButton radioButton;
 
         public CheckInAdapter(Activity activity, ArrayList<CheckIn> listValue) {
             this.mActivity = activity;
@@ -276,10 +280,11 @@ public class CheckingHistoryActivity extends AppCompatActivity {
 
                     final EditText etAmount = dialog.findViewById(R.id.et_amt);
 
-                    final RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
+//                    final RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
 
                     spinCallType = dialog.findViewById(R.id.spin_call_type);
                     spinPayType = dialog.findViewById(R.id.spin_payment_type);
+                    spinDrivingType = dialog.findViewById(R.id.spin_driving_type);
 
 
                     //Creating the ArrayAdapter instance having the country list
@@ -294,6 +299,12 @@ public class CheckingHistoryActivity extends AppCompatActivity {
                     payAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     //Setting the ArrayAdapter data on the Spinner
                     spinPayType.setAdapter(payAdapter);
+
+                    //Creating the ArrayAdapter instance having the country list
+                    ArrayAdapter drivingAdapter = new ArrayAdapter(mActivity,android.R.layout.simple_spinner_item,drivingType);
+                    drivingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    //Setting the ArrayAdapter data on the Spinner
+                    spinDrivingType.setAdapter(drivingAdapter);
 
                     spinCallType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
@@ -325,6 +336,21 @@ public class CheckingHistoryActivity extends AppCompatActivity {
                         }
                     });
 
+                    spinDrivingType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            selectedItemDrivingType = drivingType[i].toString();
+                            if (selectedItemDrivingType.equalsIgnoreCase("Select Driving Type")) {
+                                selectedItemDrivingType = "";
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
                     Button submitBtn = dialog.findViewById(R.id.submitbtn);
                     Button cancelBtn = dialog.findViewById(R.id.cancelbtn);
                     final EditText etDesc = dialog.findViewById(R.id.et_desc);
@@ -333,17 +359,20 @@ public class CheckingHistoryActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             String checkOutDesc = etDesc.getText().toString().trim();
-                            int selectedId = radioGroup.getCheckedRadioButtonId();
-                            radioButton = (RadioButton) dialog.findViewById(selectedId);
+//                            int selectedId = radioGroup.getCheckedRadioButtonId();
+//                            radioButton = (RadioButton) dialog.findViewById(selectedId);
                             String collectionAmt = etAmount.getText().toString().trim();
 
-                            if(selectedId==-1){
+//                            if(selectedId==-1){
+//                                Toast.makeText(mActivity,"Select Type of Driving", Toast.LENGTH_SHORT).show();
+//                            }
+                            if(selectedItemDrivingType.isEmpty()) {
                                 Toast.makeText(mActivity,"Select Type of Driving", Toast.LENGTH_SHORT).show();
                             }
                             else if (checkOutDesc.isEmpty()) {
                                 Toast.makeText(mActivity, "Enter Description", Toast.LENGTH_SHORT).show();
                             } else {
-                                checkOut(mActivity, arrayList.get(position).getCheckinId(), checkOutDesc, dialog, selectedItemCallType, selectedItemPayType, collectionAmt, radioButton.getText().toString());
+                                checkOut(mActivity, arrayList.get(position).getCheckinId(), checkOutDesc, dialog, selectedItemCallType, selectedItemPayType, collectionAmt, selectedItemDrivingType); //radioButton.getText().toString());
                             }
                         }
                     });

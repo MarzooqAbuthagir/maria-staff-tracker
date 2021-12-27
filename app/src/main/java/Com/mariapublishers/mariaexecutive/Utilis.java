@@ -71,6 +71,8 @@ public class Utilis {
 
     public static String imagePath = "https://digimaria.info/Track/uploads/track_user/";
     public static String expImagePath = "https://digimaria.info/Track/uploads/expense/";
+    public static String downloadReport = "https://digimaria.info/Track/api/viewuniquereportmobile?Id=";
+    public static String downloadExpenseReport = "https://digimaria.info/Track/api/viewexpenseexport?Id=";
 
     public Utilis(Context con) {
         Utilis.con = con;

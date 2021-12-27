@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,13 +19,18 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +86,7 @@ public class ExpenseActivity extends AppCompatActivity {
     String str_result = "", str_message = "";
     ArrayList<Expenses> listValue = new ArrayList<Expenses>();
 
-    String userChoosenTask = "";
+    String userChosenTask = "";
     int REQUEST_CAMERA = 101;
     int SELECT_FILE = 102;
     ImageView imgExp;
@@ -92,6 +98,10 @@ public class ExpenseActivity extends AppCompatActivity {
     LinearLayout dateLayout, toDateLayout;
     EditText dateTxt, toDateTxt;
     ImageView imgClear, toImgClear;
+
+    Spinner spinExpense;
+    String[] expenses = { "T A Dearness Allowances", "Room Rent", "Fuel Expenses", "Traveling Expenses", "Courier & Postage", "Printing & Stationary"};
+    String selectedItem="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -636,6 +646,26 @@ public class ExpenseActivity extends AppCompatActivity {
         TextView tvPickImage = dialog.findViewById(R.id.tvPickImage);
         imgExp = dialog.findViewById(R.id.img_exp);
 
+        spinExpense = dialog.findViewById(R.id.spin_expense);
+
+        //Creating the ArrayAdapter instance having the country list
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,expenses);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spinExpense.setAdapter(aa);
+
+        spinExpense.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedItem = expenses[i].toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         tvPickImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -655,7 +685,7 @@ public class ExpenseActivity extends AppCompatActivity {
                 } else if (str_desc.isEmpty()) {
                     Toast.makeText(ExpenseActivity.this, "Enter Description", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendExpense(str_amt, str_desc, dialog);
+                    sendExpense(str_amt, str_desc, dialog, selectedItem);
                 }
             }
         });
@@ -677,12 +707,12 @@ public class ExpenseActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
+                    userChosenTask = "Take Photo";
                     boolean result = Utilis.checkPermission(ExpenseActivity.this);
                     if (result)
                         cameraIntent();
                 } else if (items[item].equals("Choose from Gallery")) {
-                    userChoosenTask = "Choose from Gallery";
+                    userChosenTask = "Choose from Gallery";
                     boolean result = Utilis.checkPermission(ExpenseActivity.this);
                     if (result)
                         galleryIntent();
@@ -711,9 +741,9 @@ public class ExpenseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == Utilis.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (userChoosenTask.equals("Take Photo"))
+                if (userChosenTask.equals("Take Photo"))
                     cameraIntent();
-                else if (userChoosenTask.equals("Choose from Gallery"))
+                else if (userChosenTask.equals("Choose from Gallery"))
                     galleryIntent();
             } else {
                 Toast.makeText(ExpenseActivity.this, "Grant Permission to update profile image", Toast.LENGTH_SHORT).show();
@@ -780,7 +810,7 @@ public class ExpenseActivity extends AppCompatActivity {
         return res;
     }
 
-    private void sendExpense(final String str_amt, final String str_desc, final Dialog dialog) {
+    private void sendExpense(final String str_amt, final String str_desc, final Dialog dialog, final String selectedItem) {
         if (Utilis.isInternetOn()) {
 
             Utilis.showProgress(ExpenseActivity.this);
@@ -858,6 +888,7 @@ public class ExpenseActivity extends AppCompatActivity {
                     params.put("Userid", obj.getIndexId());
                     params.put("Amount", str_amt);
                     params.put("Description", str_desc);
+                    params.put("Expense", selectedItem);
 
                     System.out.println(TAG + " sendExpense inputs " + params);
                     return params;
@@ -1164,5 +1195,38 @@ public class ExpenseActivity extends AppCompatActivity {
             tvDesc = view.findViewById(R.id.tv_desc);
             layViewImage = view.findViewById(R.id.lay_viewImage);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_download, menu);
+        if(Integer.parseInt(obj.getRoleId()) == 1) {
+            menu.findItem(R.id.ic_download).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.ic_download) {
+            Gson gson1 = new Gson();
+            String json1 = mPrefs.getString("MyObject", "");
+            UserInfo userInfo = gson1.fromJson(json1, UserInfo.class);
+
+            String urlString = Utilis.downloadExpenseReport + userInfo.getIndexId();
+            Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+            urlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            urlIntent.setPackage("com.android.chrome");
+            try {
+                startActivity(urlIntent);
+            } catch (ActivityNotFoundException ex) {
+                // Chrome browser presumably not installed so allow user to choose instead
+                urlIntent.setPackage(null);
+                startActivity(urlIntent);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

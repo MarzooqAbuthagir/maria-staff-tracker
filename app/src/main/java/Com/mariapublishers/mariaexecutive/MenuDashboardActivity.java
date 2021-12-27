@@ -8,12 +8,14 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,6 +80,7 @@ public class MenuDashboardActivity extends AppCompatActivity {
             "Messages",
             "Attendance",
             "Checking History",
+            "Report",
             "Logout"
     };
 
@@ -89,13 +92,14 @@ public class MenuDashboardActivity extends AppCompatActivity {
             R.mipmap.ic_news_round,
             R.mipmap.ic_attendacne_round,
             R.mipmap.ic_history_round,
+            R.mipmap.ic_report,
             R.mipmap.ic_logout_round,
     };
 
     SharedPreferences mPrefs;
     Timer mTimer = null;
     public static final int notify = 30000;  //interval between two services(Here Service run every 30 seconds)
-    private Handler mHandler = new Handler();   //run on another Thread to avoid crash
+    private final Handler mHandler = new Handler();   //run on another Thread to avoid crash
     public static boolean isDashTimerRunning = true;
     int gpsAlertCount = 0;
     Dialog add_dialog;
@@ -107,7 +111,7 @@ public class MenuDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_dashboard);
         app = (App) getApplication();
-        gridView = (GridView) findViewById(R.id.gridView);
+        gridView = findViewById(R.id.gridView);
 
         mPrefs = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
         if (LoginSharedPreference.getLoggedStatus(MenuDashboardActivity.this)) {
@@ -221,7 +225,28 @@ public class MenuDashboardActivity extends AppCompatActivity {
                         isDashTimerRunning = false;
                         startActivity(new Intent(MenuDashboardActivity.this, AttendanceListActivity.class));
                         finish();
+                        break;
 
+                    case "Report":
+                        isDashTimerRunning = false;
+
+                        Gson gson1 = new Gson();
+                        String json1 = mPrefs.getString("MyObject", "");
+                        UserInfo userInfo = gson1.fromJson(json1, UserInfo.class);
+
+                        String urlString = Utilis.downloadReport + userInfo.getIndexId();
+                        Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+                        urlIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        urlIntent.setPackage("com.android.chrome");
+                        try {
+                            startActivity(urlIntent);
+                        } catch (ActivityNotFoundException ex) {
+                            // Chrome browser presumably not installed so allow user to choose instead
+                            urlIntent.setPackage(null);
+                            startActivity(urlIntent);
+                        }
+
+                        break;
                 }
             }
         });

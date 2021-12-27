@@ -37,6 +37,22 @@
             android:textColor="@android:color/black"
             android:textSize="20dp" />
 
+        <LinearLayout
+            android:background="@color/white"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spin_expense"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"/>
+
+        </LinearLayout>
+
         <EditText
             android:id="@+id/et_amt"
             android:layout_width="match_parent"
