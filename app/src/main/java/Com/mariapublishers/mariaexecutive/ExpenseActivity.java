@@ -646,6 +646,23 @@ public class ExpenseActivity extends AppCompatActivity {
         TextView tvPickImage = dialog.findViewById(R.id.tvPickImage);
         imgExp = dialog.findViewById(R.id.img_exp);
 
+        LinearLayout expDateLayout = dialog.findViewById(R.id.exp_date_layout);
+        final EditText expDateTxt = dialog.findViewById(R.id.exp_date_txt);
+
+        expDateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectExpDate(expDateTxt);
+            }
+        });
+
+        expDateTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectExpDate(expDateTxt);
+            }
+        });
+
         spinExpense = dialog.findViewById(R.id.spin_expense);
 
         //Creating the ArrayAdapter instance having the country list
@@ -679,13 +696,16 @@ public class ExpenseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String str_amt = amtEt.getText().toString();
                 String str_desc = descEt.getText().toString();
+                String str_exp_date = expDateTxt.getText().toString();
 
                 if (str_amt.isEmpty()) {
                     Toast.makeText(ExpenseActivity.this, "Enter Amount", Toast.LENGTH_SHORT).show();
                 } else if (str_desc.isEmpty()) {
                     Toast.makeText(ExpenseActivity.this, "Enter Description", Toast.LENGTH_SHORT).show();
+                } else if (str_exp_date.isEmpty()) {
+                    Toast.makeText(ExpenseActivity.this, "Select Expense Date", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendExpense(str_amt, str_desc, dialog, selectedItem);
+                    sendExpense(str_amt, str_desc, dialog, selectedItem, str_exp_date);
                 }
             }
         });
@@ -696,6 +716,53 @@ public class ExpenseActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+    }
+
+    private void selectExpDate(final EditText expDateTxt) {
+        Calendar calendar = Calendar.getInstance();
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dpd = new DatePickerDialog(ExpenseActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                // Display Selected date in textbox
+
+                String strMonth = "";
+                String strDay = "";
+                String monthofYear = String.valueOf(monthOfYear + 1);
+
+                try {
+                    if (String.valueOf(monthOfYear + 1).length() == 1) {
+                        strMonth = String.valueOf("0" + monthofYear);
+                    } else {
+                        strMonth = String.valueOf(monthofYear);
+                    }
+
+                    if (String.valueOf(dayOfMonth).length() == 1) {
+                        strDay = String.valueOf("0" + dayOfMonth);
+                    } else {
+                        strDay = String.valueOf(dayOfMonth);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "onDateSet: " + e.getMessage(), e);
+                }
+
+                String date = year + "-" + strMonth + "-" + strDay;
+
+                expDateTxt.setText(date);
+
+            }
+        }, mYear, mMonth, mDay);
+        dpd.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //ignored
+            }
+        });
+        dpd.show();
     }
 
     private void selectImage() {
@@ -810,7 +877,7 @@ public class ExpenseActivity extends AppCompatActivity {
         return res;
     }
 
-    private void sendExpense(final String str_amt, final String str_desc, final Dialog dialog, final String selectedItem) {
+    private void sendExpense(final String str_amt, final String str_desc, final Dialog dialog, final String selectedItem, final String str_exp_date) {
         if (Utilis.isInternetOn()) {
 
             Utilis.showProgress(ExpenseActivity.this);
@@ -889,6 +956,7 @@ public class ExpenseActivity extends AppCompatActivity {
                     params.put("Amount", str_amt);
                     params.put("Description", str_desc);
                     params.put("Expense", selectedItem);
+                    params.put("expenseDate", str_exp_date);
 
                     System.out.println(TAG + " sendExpense inputs " + params);
                     return params;

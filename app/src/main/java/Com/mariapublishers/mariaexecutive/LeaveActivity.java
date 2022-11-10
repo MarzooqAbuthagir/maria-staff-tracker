@@ -1,12 +1,5 @@
 package Com.mariapublishers.mariaexecutive;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -28,6 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -63,12 +63,12 @@ public class LeaveActivity extends AppCompatActivity {
     UserInfo obj;
     Dialog dialog;
     EditText dateTxt, todateTxt;
-    String str_result="", str_message="";
+    String str_result = "", str_message = "";
     ArrayList<Leave> listValue = new ArrayList<Leave>();
 
     Spinner spinReason;
-    String[] reasons = { "Sick", "Grief", "Pay leave", "Personal leave", "Maternity/Paternity", "Others"};
-    String selectedItem="";
+    String[] reasons = {"Sick", "Grief", "Pay leave", "Personal leave", "Maternity/Paternity", "Others"};
+    String selectedItem = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,7 @@ public class LeaveActivity extends AppCompatActivity {
             }
         });
 
-        if(Integer.parseInt(obj.getRoleId())==1) {
+        if (Integer.parseInt(obj.getRoleId()) == 1) {
             fab.setVisibility(View.GONE);
             adminViewLeave();
         } else {
@@ -336,7 +336,7 @@ public class LeaveActivity extends AppCompatActivity {
         spinReason = dialog.findViewById(R.id.spin_reason);
 
         //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,reasons);
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, reasons);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spinReason.setAdapter(aa);
@@ -344,7 +344,7 @@ public class LeaveActivity extends AppCompatActivity {
         spinReason.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                 selectedItem = reasons[i].toString();
+                selectedItem = reasons[i].toString();
                 if (selectedItem.equalsIgnoreCase("Others")) {
                     descEt.setVisibility(View.VISIBLE);
                 } else {
@@ -472,7 +472,7 @@ public class LeaveActivity extends AppCompatActivity {
             }
         });
 
-        dpd.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+        dpd.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         dpd.show();
     }
 
@@ -608,7 +608,7 @@ public class LeaveActivity extends AppCompatActivity {
             }
         });
 
-        dpd.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+        dpd.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         dpd.show();
     }
 
@@ -629,6 +629,7 @@ public class LeaveActivity extends AppCompatActivity {
     private class LeaveAdapter extends RecyclerView.Adapter<ViewHolder> {
         Activity mActivity;
         private ArrayList<Leave> arrayList;
+
         public LeaveAdapter(Activity leaveActivity, ArrayList<Leave> listValue) {
             mActivity = leaveActivity;
             arrayList = listValue;
@@ -680,6 +681,7 @@ public class LeaveActivity extends AppCompatActivity {
     private class AdminLeaveAdapter extends RecyclerView.Adapter<MyViewHolder> {
         Activity mActivity;
         private ArrayList<Leave> arrayList;
+
         public AdminLeaveAdapter(Activity leaveActivity, ArrayList<Leave> listValue) {
             mActivity = leaveActivity;
             arrayList = listValue;
@@ -694,23 +696,23 @@ public class LeaveActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-holder.tvDate.setText(arrayList.get(position).getFromDate());
-holder.tvName.setText(arrayList.get(position).getUserName());
-holder.tvDesc.setText(arrayList.get(position).getReason());
-holder.tvEndDate.setText(arrayList.get(position).getToDate());
+            holder.tvDate.setText(arrayList.get(position).getFromDate());
+            holder.tvName.setText(arrayList.get(position).getUserName());
+            holder.tvDesc.setText(arrayList.get(position).getReason());
+            holder.tvEndDate.setText(arrayList.get(position).getToDate());
 
-if ("Pending".equalsIgnoreCase(arrayList.get(position).getStatus())) {
-    holder.layPending.setVisibility(View.VISIBLE);
-    holder.layStatus.setVisibility(View.GONE);
-} else {
-    holder.layPending.setVisibility(View.GONE);
-    holder.layStatus.setVisibility(View.VISIBLE);
-}
+            if ("Pending".equalsIgnoreCase(arrayList.get(position).getStatus())) {
+                holder.layPending.setVisibility(View.VISIBLE);
+                holder.layStatus.setVisibility(View.GONE);
+            } else {
+                holder.layPending.setVisibility(View.GONE);
+                holder.layStatus.setVisibility(View.VISIBLE);
+            }
 
             if ("Approved".equalsIgnoreCase(arrayList.get(position).getStatus())) {
                 holder.layStatus.setBackgroundColor(getResources().getColor(R.color.approved));
                 holder.tvStatus.setText(arrayList.get(position).getStatus());
-            } else if ("Reject".equalsIgnoreCase(arrayList.get(position).getStatus())){
+            } else if ("Reject".equalsIgnoreCase(arrayList.get(position).getStatus())) {
                 holder.layStatus.setBackgroundColor(getResources().getColor(R.color.rejected));
                 holder.tvStatus.setText("Rejected");
             }
@@ -768,7 +770,7 @@ if ("Pending".equalsIgnoreCase(arrayList.get(position).getStatus())) {
                             String prefJson = mPrefs.getString("MyObject", "");
                             UserInfo userInfo = gson.fromJson(prefJson, UserInfo.class);
 
-                            if(Integer.parseInt(userInfo.getRoleId())==1) {
+                            if (Integer.parseInt(userInfo.getRoleId()) == 1) {
                                 adminViewLeave();
                             } else {
                                 exeViewLeave();
@@ -860,7 +862,7 @@ if ("Pending".equalsIgnoreCase(arrayList.get(position).getStatus())) {
                             String prefJson = mPrefs.getString("MyObject", "");
                             UserInfo userInfo = gson.fromJson(prefJson, UserInfo.class);
 
-                            if(Integer.parseInt(userInfo.getRoleId())==1) {
+                            if (Integer.parseInt(userInfo.getRoleId()) == 1) {
                                 adminViewLeave();
                             } else {
                                 exeViewLeave();

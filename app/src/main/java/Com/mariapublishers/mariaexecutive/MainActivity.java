@@ -19,7 +19,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -187,6 +186,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             getLocation();
         }
 
+        getAttendance();
+
         myLocationLayout = findViewById(R.id.my_location_layout);
         myLocationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +225,95 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+    }
+
+    private void getAttendance() {
+        if (Utilis.isInternetOn()) {
+            Utilis.showProgress(MainActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.checkattendancecheckout, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " getAttendance checkattendancecheckout response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " getAttendance checkattendancecheckout result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 1) {
+                            str_message = obj.getString("Message");
+
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+
+                        } else if (Integer.parseInt(str_result) == 0) {
+
+                            str_message = obj.getString("Message");
+                            setMenuVisible(false);
+                        } else if (Integer.parseInt(str_result) == 2) {
+
+                            str_message = obj.getString("Message");
+                            setMenuVisible(true);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+
+                    params.put("ExecutiveId", obj.getIndexId());
+
+                    System.out.println(TAG + " getAttendance checkattendancecheckout inputs " + params);
+                    return params;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        } else {
+            Toast.makeText(this, MainActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setMenuVisible(boolean isVisible) {
+        Menu menu = navigationView.getMenu();
+        for (int menuItemIndex = 0; menuItemIndex < menu.size(); menuItemIndex++) {
+            MenuItem menuItem = menu.getItem(menuItemIndex);
+            if (menuItem.getItemId() == R.id.nav_attendance_checkout) {
+                menuItem.setVisible(isVisible);
+            }
+        }
     }
 
     private void fetchLastLocation() {
@@ -373,6 +463,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             drawer.closeDrawers();
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             finish();
+        } else if (id == R.id.nav_attendance_checkout) {
+            drawer.closeDrawers();
+            toAttendanceCheckout();
         } else if (id == R.id.nav_Logout) {
             drawer.closeDrawers();
             toLogoutCustomer();
@@ -381,13 +474,101 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+    private void toAttendanceCheckout() {
+        if (Utilis.isInternetOn()) {
+            Utilis.showProgress(MainActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.makeattendancecheckout, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " toAttendanceCheckout response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " toAttendanceCheckout result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 0) {
+                            str_message = obj.getString("Message");
+
+                            getAttendance();
+
+                        } else if (Integer.parseInt(str_result) == 2) {
+                            str_message = obj.getString("Message");
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                        } else if (Integer.parseInt(str_result) == 1) {
+                            str_message = obj.getString("Message");
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+
+                    params.put("Userid", obj.getIndexId());
+
+                    System.out.println(TAG + " toAttendanceCheckout inputs " + params);
+                    return params;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        } else {
+            Toast.makeText(this, MainActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     Spinner spinCusType;
-    String[] cusType = {"Select Customer Type", "New Customer", "Follow up",};
+    String[] cusType = {"Select Customer Type", "New Customer", "Follow up", "Head Office", "Branch Office"};
     String selectedItemCusType = "";
 
     String cusName = "";
     int customerTypePos = 0;
+
+    Spinner spinContactType;
+    String[] contactType = {"Select Contact Type", "Principal", "Head Master", "Correspondent", "Vice Principal", "Office Staff", "Secretary", "Teachers", "Others"};
+    String selectedItemContactType = "";
+
+    EditText contactPersonEt;
+    EditText contactNumberEt;
+    EditText emailEt;
+    EditText websiteEt;
+    EditText additionalCustomerEt, notesEt, textAreaEt;
+    LinearLayout layContactType;
+    boolean isRequired = false;
 
     private void checkInAddress(String checkinAddr, final double lat, final double lng) {
 
@@ -399,20 +580,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final EditText addrEt = checkin_dialog.findViewById(R.id.et_address);
         addrEt.setText(checkinAddr);
-        final EditText notesEt = checkin_dialog.findViewById(R.id.et_desc);
-        Button submitBtn = checkin_dialog.findViewById(R.id.submitbtn);
-        Button cancelBtn = checkin_dialog.findViewById(R.id.cancelbtn);
+        notesEt = checkin_dialog.findViewById(R.id.et_desc);
 
         spinCusType = checkin_dialog.findViewById(R.id.spin_cus_type);
+        spinContactType = checkin_dialog.findViewById(R.id.spin_contact_type);
 
 
-        final EditText contactPersonEt = checkin_dialog.findViewById(R.id.et_contact_name);
+        contactPersonEt = checkin_dialog.findViewById(R.id.et_contact_name);
+        contactNumberEt = checkin_dialog.findViewById(R.id.et_contact_number);
+        emailEt = checkin_dialog.findViewById(R.id.et_email);
+        websiteEt = checkin_dialog.findViewById(R.id.et_website);
+        additionalCustomerEt = checkin_dialog.findViewById(R.id.et_additional_customer);
+        textAreaEt = checkin_dialog.findViewById(R.id.et_text_area);
 
         final EditText cusNameEt = checkin_dialog.findViewById(R.id.et_cus_name);
 
         final AutoCompleteTextView text = checkin_dialog.findViewById(R.id.autoCompleteTextView);
+        layContactType = checkin_dialog.findViewById(R.id.lay_contact_type);
 
-        getCustomerName(cusNameEt);
+        isRequired = false;
+
+        getCustomerName(cusNameEt, lat, lng);
 
         //Creating the ArrayAdapter instance having the country list
         ArrayAdapter cusAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, cusType);
@@ -433,12 +621,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     cusNameEt.setText("");
                     cusNameEt.setEnabled(false);
                     text.setVisibility(View.GONE);
+                    contactPersonEt.setVisibility(View.VISIBLE);
+                    textAreaEt.setVisibility(View.GONE);
+
+                    isRequired = false;
+                    contactNumberEt.setVisibility(View.GONE);
+                    emailEt.setVisibility(View.GONE);
+                    websiteEt.setVisibility(View.GONE);
+                    layContactType.setVisibility(View.GONE);
+                    additionalCustomerEt.setVisibility(View.GONE);
+                    selectedItemContactType = "";
+
                 } else if (i == 1) {
                     customerTypePos = i;
                     text.setVisibility(View.VISIBLE);
+                    text.setText("");
+                    contactPersonEt.setText("");
+                    notesEt.setText("");
                     cusNameEt.setVisibility(View.GONE);
                     cusNameEt.setText("");
                     cusNameEt.setEnabled(true);
+                    contactPersonEt.setVisibility(View.VISIBLE);
+                    textAreaEt.setVisibility(View.GONE);
+
+                    isRequired = false;
+                    contactNumberEt.setVisibility(View.GONE);
+                    emailEt.setVisibility(View.GONE);
+                    websiteEt.setVisibility(View.GONE);
+                    layContactType.setVisibility(View.GONE);
+                    additionalCustomerEt.setVisibility(View.GONE);
+                    selectedItemContactType = "";
+
                     ArrayAdapter<String> adapter = new
                             ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, checkInCustomerNameValue) {
                                 @NonNull
@@ -452,12 +665,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     text.setAdapter(adapter);
                     text.setThreshold(1);
-                } else {
+                } else if (i ==2){
                     customerTypePos = i;
                     cusNameEt.setVisibility(View.VISIBLE);
                     cusNameEt.setText("");
                     cusNameEt.setEnabled(false);
                     text.setVisibility(View.GONE);
+                    contactPersonEt.setVisibility(View.VISIBLE);
+                    textAreaEt.setVisibility(View.GONE);
+
+                    isRequired = false;
+                    contactNumberEt.setVisibility(View.GONE);
+                    emailEt.setVisibility(View.GONE);
+                    websiteEt.setVisibility(View.GONE);
+                    layContactType.setVisibility(View.GONE);
+                    additionalCustomerEt.setVisibility(View.GONE);
+                    selectedItemContactType = "";
+
                     new SimpleSearchDialogCompat(MainActivity.this, "Customer Name ", "Search here...",
                             null, initData(), new SearchResultListener<Searchable>() {
                         @Override
@@ -465,8 +689,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             System.out.println("search " + searchable.getTitle());
                             baseSearchDialogCompat.dismiss();
                             cusNameEt.setText(searchable.getTitle());
+                            getRecentRecords(cusNameEt.getText().toString());
                         }
                     }).show();
+                } else {
+                    customerTypePos = i;
+                    text.setVisibility(View.GONE);
+                    cusNameEt.setVisibility(View.GONE);
+                    cusNameEt.setText("");
+                    cusNameEt.setEnabled(true);
+                    contactPersonEt.setVisibility(View.GONE);
+                    textAreaEt.setVisibility(View.VISIBLE);
+                    textAreaEt.setText("");
+                    notesEt.setText("");
+
+                    isRequired = false;
+                    contactNumberEt.setVisibility(View.GONE);
+                    emailEt.setVisibility(View.GONE);
+                    websiteEt.setVisibility(View.GONE);
+                    layContactType.setVisibility(View.GONE);
+                    additionalCustomerEt.setVisibility(View.GONE);
+                    selectedItemContactType = "";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        //Creating the ArrayAdapter instance having the country list
+        ArrayAdapter conAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, contactType);
+        conAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Setting the ArrayAdapter data on the Spinner
+        spinContactType.setAdapter(conAdapter);
+
+        spinContactType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedItemContactType = contactType[i].toString();
+                if (selectedItemContactType.equalsIgnoreCase("Select Contact Type")) {
+                    selectedItemContactType = "";
+                }
+                if (selectedItemContactType.equalsIgnoreCase("Others")) {
+                    additionalCustomerEt.setVisibility(View.VISIBLE);
+                } else {
+                    additionalCustomerEt.setVisibility(View.GONE);
                 }
             }
 
@@ -476,11 +744,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        final EditText etArea = checkin_dialog.findViewById(R.id.et_area);
+        Button submitBtn = checkin_dialog.findViewById(R.id.submitbtn);
+        Button cancelBtn = checkin_dialog.findViewById(R.id.cancelbtn);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String str_checkin_address = addrEt.getText().toString().trim();
                 String str_notes = notesEt.getText().toString().trim();
+                String str_area = etArea.getText().toString().trim();
+                String strTextArea = textAreaEt.getText().toString().trim();
 
                 if (customerTypePos == 1) {
                     cusName = text.getText().toString().trim();
@@ -490,16 +763,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     cusName = "";
                 }
                 String contactPerson = contactPersonEt.getText().toString().trim();
+                String contactNumber = contactNumberEt.getText().toString().trim();
+                String email = emailEt.getText().toString().trim();
+                String website = websiteEt.getText().toString().trim();
+                String additionalCus = additionalCustomerEt.getText().toString().trim();
 
                 if (selectedItemCusType.equals("")) {
                     Toast.makeText(MainActivity.this, "Select Customer Type", Toast.LENGTH_SHORT).show();
-                } else if (cusName.equals("")) {
+                } else if ((selectedItemCusType.equalsIgnoreCase("New Customer") || selectedItemCusType.equalsIgnoreCase("Follow up")) && cusName.equals("")) {
                     Toast.makeText(MainActivity.this, "Customer Name required", Toast.LENGTH_SHORT).show();
                 } else if (str_checkin_address.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Address should not be Empty", Toast.LENGTH_SHORT).show();
+                } /*else if (str_area.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Area required", Toast.LENGTH_SHORT).show();
+                }*/ else if (selectedItemCusType.equalsIgnoreCase("Follow up") && selectedItemContactType.equals("") && isRequired) {
+                    Toast.makeText(MainActivity.this, "Select Contact Type", Toast.LENGTH_SHORT).show();
+                } else if (selectedItemContactType.equalsIgnoreCase("Others") && additionalCus.isEmpty() && isRequired) {
+                    Toast.makeText(MainActivity.this, "Additional Customer required", Toast.LENGTH_SHORT).show();
+                } else if ((selectedItemCusType.equalsIgnoreCase("New Customer") || selectedItemCusType.equalsIgnoreCase("Follow up")) && contactPerson.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Contact Person required", Toast.LENGTH_SHORT).show();
+                } else if (selectedItemCusType.equalsIgnoreCase("Follow up") && contactNumber.isEmpty() && isRequired) {
+                    Toast.makeText(MainActivity.this, "Contact Number required", Toast.LENGTH_SHORT).show();
+                } else if ((selectedItemCusType.equalsIgnoreCase("Head Office") || selectedItemCusType.equalsIgnoreCase("Branch Office")) && textAreaEt.getText().toString().isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Text required", Toast.LENGTH_SHORT).show();
+                } else if (notesEt.getText().toString().isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Notes required", Toast.LENGTH_SHORT).show();
                 } else {
                     System.out.println("name is " + cusName);
-                    sendCheckInAddress(str_checkin_address, lat, lng, checkin_dialog, str_notes, selectedItemCusType, cusName, contactPerson);
+                    if (customerTypePos == 1 || customerTypePos == 2) {
+                        sendCheckInAddress(str_checkin_address, lat, lng, checkin_dialog, str_notes, selectedItemCusType, cusName, contactPerson, contactNumber, email, website, additionalCus, selectedItemContactType, str_area);
+                    } else {
+                        sendNewCustomerType(str_checkin_address, lat, lng, checkin_dialog, str_notes, selectedItemCusType, strTextArea);
+                    }
                 }
             }
         });
@@ -512,7 +807,251 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void getCustomerName(final EditText cusNameEt) {
+    private void sendNewCustomerType(final String str_checkin_address, final double lat, final double lng, final Dialog checkin_dialog, final String str_notes, final String selectedItemCusType, final String strTextArea) {
+        if (Utilis.isInternetOn()) {
+
+            Utilis.showProgress(MainActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.newcustomertype, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " sendNewCustomerType response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " sendNewCustomerType result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 1) {
+                            str_message = obj.getString("Message");
+
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+
+                        } else if (Integer.parseInt(str_result) == 0) {
+
+                            str_message = obj.getString("message");
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                            checkin_dialog.dismiss();
+
+                        } else if (Integer.parseInt(str_result) == 2) {
+                            str_message = obj.getString("Message");
+
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+
+                    params.put("executiveId", obj.getIndexId());
+                    params.put("latitude", String.valueOf(lat));
+                    params.put("longitude", String.valueOf(lng));
+                    params.put("customerAddress", str_checkin_address);
+                    params.put("notes", str_notes);
+                    params.put("customerType", selectedItemCusType);
+                    params.put("textArea", strTextArea);
+
+                    System.out.println(TAG + " sendNewCustomerType inputs " + params);
+                    return params;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+        } else {
+            Toast.makeText(this, MainActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void getRecentRecords(final String cusName) {
+        if (Utilis.isInternetOn()) {
+
+            Utilis.showProgress(MainActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.getrecentrecords, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " getrecentrecords response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " getrecentrecords result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 1) {
+                            str_message = obj.getString("Message");
+                            isRequired = false;
+                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+
+                        } else if (Integer.parseInt(str_result) == 0) {
+
+                            str_message = obj.getString("message");
+                            JSONObject json = obj.getJSONObject("result");
+                            isRequired=true;
+                            contactNumberEt.setVisibility(View.VISIBLE);
+                            emailEt.setVisibility(View.VISIBLE);
+                            websiteEt.setVisibility(View.VISIBLE);
+                            layContactType.setVisibility(View.VISIBLE);
+
+                            contactPersonEt.setText(json.getString("ContactPerson"));
+                            if (json.getString("ContactNum") == null || json.getString("ContactNum").equalsIgnoreCase("null")) {
+                                contactNumberEt.setText("");
+                            } else {
+                                contactNumberEt.setText(json.getString("ContactNum"));
+                            }
+                            if (json.getString("Email") == null || json.getString("Email").equalsIgnoreCase("null")) {
+                                emailEt.setText("");
+                            } else {
+                                emailEt.setText(json.getString("Email"));
+                            }
+                            if (json.getString("Website") == null || json.getString("Website").equalsIgnoreCase("null")) {
+                                websiteEt.setText("");
+                            } else {
+                                websiteEt.setText(json.getString("Website"));
+                            }
+                            if (json.getString("Notes") == null || json.getString("Notes").equalsIgnoreCase("null")) {
+                                notesEt.setText("");
+                            } else {
+                                notesEt.setText(json.getString("Notes"));
+                            }
+                            if (json.getString("AdditionalCustomer") == null || json.getString("AdditionalCustomer").equalsIgnoreCase("null")) {
+                                additionalCustomerEt.setText("");
+                            } else {
+                                additionalCustomerEt.setText(json.getString("AdditionalCustomer"));
+                            }
+                            String strContactType = json.getString("ContactType");
+
+                            int prefPos = 0;
+                            for (int i = 0; i < contactType.length; i++) {
+                                if (contactType[i].equalsIgnoreCase(strContactType)) {
+                                    prefPos = i;
+                                    break;
+                                }
+                            }
+
+                            ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, R.layout.spinner_item, contactType);
+                            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            //Setting the ArrayAdapter data on the Spinner
+                            spinContactType.setAdapter(arrayAdapter);
+                            spinContactType.setSelection(prefPos);
+
+                            if (strContactType.equalsIgnoreCase("Others")) {
+                                additionalCustomerEt.setVisibility(View.VISIBLE);
+                            } else {
+                                additionalCustomerEt.setVisibility(View.GONE);
+                                selectedItemContactType = "";
+                            }
+
+                        } else if (Integer.parseInt(str_result) == 2) {
+                            str_message = obj.getString("message");
+                            isRequired = false;
+//                            Toast.makeText(MainActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                            contactNumberEt.setVisibility(View.GONE);
+                            emailEt.setVisibility(View.GONE);
+                            websiteEt.setVisibility(View.GONE);
+                            layContactType.setVisibility(View.GONE);
+                            additionalCustomerEt.setVisibility(View.GONE);
+                            selectedItemContactType = "";
+
+                            contactPersonEt.setText("");
+                            contactNumberEt.setText("");
+                            emailEt.setText("");
+                            websiteEt.setText("");
+                            notesEt.setText("");
+                            additionalCustomerEt.setText("");
+
+                            //Creating the ArrayAdapter instance having the country list
+                            ArrayAdapter conAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_spinner_item, contactType);
+                            conAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            //Setting the ArrayAdapter data on the Spinner
+                            spinContactType.setAdapter(conAdapter);
+                            spinContactType.setSelection(0);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+                    isRequired = false;
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("executiveId", obj.getIndexId());
+                    params.put("customerName", cusName);
+                    return params;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
+
+        } else {
+            Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void getCustomerName(final EditText cusNameEt, final double lat, final double lng) {
         if (Utilis.isInternetOn()) {
 
             Utilis.showProgress(MainActivity.this);
@@ -588,6 +1127,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
+                    params.put("latitude", String.valueOf(lat));
+                    params.put("longitude", String.valueOf(lng));
                     return params;
                 }
             };
@@ -608,12 +1149,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return items;
     }
 
-    private void sendCheckInAddress(final String str_checkin_address, final double lat, final double lng, final Dialog checkin_dialog, final String str_notes, final String CustomerType, final String cusName, final String contactPerson) {
+    private void sendCheckInAddress(final String str_checkin_address, final double lat, final double lng, final Dialog checkin_dialog, final String str_notes, final String CustomerType, final String cusName, final String contactPerson, final String contactNumber, final String email, final String website, final String additionalCus, final String selectedItemContactType, final String str_area) {
         if (Utilis.isInternetOn()) {
 
             Utilis.showProgress(MainActivity.this);
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.checkin, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.checkinnew, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
@@ -685,6 +1226,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     params.put("Customertype", CustomerType);
                     params.put("Customername", cusName);
                     params.put("Contactperson", contactPerson);
+                    params.put("Area", notesEt.getText().toString());
+                    params.put("ContactType", selectedItemContactType);
+                    params.put("ContactNum", contactNumber);
+                    params.put("Email", email);
+                    params.put("Website", website);
+                    params.put("AdditionalCustomer", additionalCus);
 
                     System.out.println(TAG + " sendCheckInAddress inputs " + params);
                     return params;

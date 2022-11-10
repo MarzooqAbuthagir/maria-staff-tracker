@@ -4,22 +4,65 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/FreeLancing/MariaExecutive/app/src/main/res/layout/check_in_address_alert_dialog.xml" value="0.1921875" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/circle.xml" value="0.184" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/color_circle.xml" value="0.184" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/ic_attendance_checkout.xml" value="0.215" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/ic_baseline_trending_up_24.xml" value="0.2703125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/ic_logout.xml" value="0.2595" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/ic_report.xml" value="0.2703125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/receive_msg.xml" value="0.184" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/rounded_textview.xml" value="0.184" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/send_msg.xml" value="0.184" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/shape_big_edittext.xml" value="0.171" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/drawable/shape_edittext.xml" value="0.171" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_add_specimen.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_app_update.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_attendance.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_attendance_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_chat_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_chatbot.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_checking_history.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_download_report.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_expense.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_group_chat.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_group_chat_bot.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_leave.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_menu_dashboard.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_others_checking_history.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_stock.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/activity_view_stock.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/add_expense_alert_dialog.xml" value="0.18432971014492755" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/add_leave_alert_dialog.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/attendance_list_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/check_in_address_alert_dialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/check_in_detail_update_alert_dialog.xml" value="0.253125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/check_out_alert_dialog.xml" value="0.4" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/checking_history_list_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/executive_list_item.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/expense_list_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/grid_list_item.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/row_chat_left.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/row_chat_right.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/spcimen_alert_dialog.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/specimen_alert_dialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/specimen_list_item.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/spinner_item.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/layout/stock_list_item.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/drawer_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/menu_add_specimen.xml" value="0.253125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/menu_chat.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/menu_check_in.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/menu_download.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/menu_group_chat.xml" value="0.253125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/menu/menu_logout.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_attendacne.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_attendacne_round.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_check_in.xml" value="0.2703125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_current_location_round.xml" value="0.215" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_exe_tracking_round.xml" value="0.2703125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_expense.xml" value="0.184" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_expense_round.xml" value="0.184" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_leave.xml" value="0.2703125" />
@@ -29,6 +72,7 @@
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_news.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_news_round.xml" value="0.2703125" />
         <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_report.xml" value="0.2703125" />
+        <entry key="..\:/Users/Marzooq/Android Project/MariaExecutive/app/src/main/res/mipmap-anydpi-v26/ic_spcimen.xml" value="0.184" />
       </map>
     </option>
   </component>

@@ -21,6 +21,27 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:supportsRtl,allowBackup">
+        <activity
+            android:name=".ViewStockActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddSpecimenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StockActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupChatBotActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatBotActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatListActivity"
+            android:exported="false" />
         <activity android:name=".AttendanceListActivity" />
         <activity android:name=".AppUpdateActivity" />
         <activity android:name=".AttendanceActivity" />
@@ -56,6 +77,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <service
             android:name=".MyService"
             android:enabled="true"

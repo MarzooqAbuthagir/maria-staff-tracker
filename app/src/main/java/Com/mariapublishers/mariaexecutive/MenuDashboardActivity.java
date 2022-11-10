@@ -1,10 +1,5 @@
 package Com.mariapublishers.mariaexecutive;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,16 +10,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -36,7 +40,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -81,6 +84,7 @@ public class MenuDashboardActivity extends AppCompatActivity {
             "Attendance",
             "Checking History",
             "Report",
+            "Specimen",
             "Logout"
     };
 
@@ -93,6 +97,7 @@ public class MenuDashboardActivity extends AppCompatActivity {
             R.mipmap.ic_attendacne_round,
             R.mipmap.ic_history_round,
             R.mipmap.ic_report,
+            R.mipmap.ic_spcimen_round,
             R.mipmap.ic_logout_round,
     };
 
@@ -106,12 +111,25 @@ public class MenuDashboardActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 101;
     App app;
 
+    Toolbar toolbar;
+    ActionBar actionBar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_dashboard);
         app = (App) getApplication();
         gridView = findViewById(R.id.gridView);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDefaultDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
 
         mPrefs = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
         if (LoginSharedPreference.getLoggedStatus(MenuDashboardActivity.this)) {
@@ -246,6 +264,12 @@ public class MenuDashboardActivity extends AppCompatActivity {
                             startActivity(urlIntent);
                         }
 
+                        break;
+
+                    case "Specimen":
+                        isDashTimerRunning = false;
+                        startActivity(new Intent(MenuDashboardActivity.this, StockActivity.class));
+                        finish();
                         break;
                 }
             }
@@ -474,6 +498,102 @@ public class MenuDashboardActivity extends AppCompatActivity {
                 System.out.println("my timer stopped");
                 mTimer.cancel();
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.ic_chat) {
+            Gson gson = new Gson();
+            String json = mPrefs.getString("MyObject", "");
+            UserInfo obj = gson.fromJson(json, UserInfo.class);
+            if (Integer.parseInt(obj.getRoleId()) == 1) {
+                isDashTimerRunning = false;
+                startActivity(new Intent(MenuDashboardActivity.this, ChatListActivity.class));
+                finish();
+            } else {
+                getAdminDetail();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    String str_result = "", str_message = "";
+
+    private void getAdminDetail() {
+        if (Utilis.isInternetOn()) {
+            Utilis.showProgress(MenuDashboardActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, Utilis.Api + Utilis.getadmin, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " getAdminDetail response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " getAdminDetail result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 0) {
+                            str_message = obj.getString("message");
+                            JSONObject json = obj.getJSONObject("result");
+                            isDashTimerRunning = false;
+                            Intent intent = new Intent(MenuDashboardActivity.this, ChatBotActivity.class);
+                            intent.putExtra("name", json.getString("adminName"));
+                            intent.putExtra("receiverId", json.getString("adminIndexId"));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MenuDashboardActivity.this, MenuDashboardActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    return new HashMap<>();
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        } else {
+            Toast.makeText(this, MenuDashboardActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -36,6 +36,7 @@ public class Utilis {
     public static String login = "userlogin";
     public static String updateLatLng = "updatelatlng";
     public static String checkin = "checkin";
+    public static String checkinnew = "checkinnew";
     public static String checkinHistory = "checkinhistory";
     public static String adminviewuser = "adminviewuser";
     public static String profileupdate = "profileupdate";
@@ -66,8 +67,26 @@ public class Utilis {
     public static String updatecheckout = "updatecheckout";
     public static String uploadexpenseimage = "uploadexpenseimage";
     public static String checkattendance = "checkattendance";
-    public static String getcheckincustomername = "getcheckincustomername";
+    public static String getcheckincustomername = "getcheckincustomernamenew";//"getcheckincustomername";
     public static String filterexpense = "expensefilter";
+    public static String checkattendancecheckout = "checkattendancecheckout";
+    public static String makeattendancecheckout = "makeattendancecheckout";
+    public static String getexecutivelist = "getexecutivelist";
+    public static String getadmin = "getadmin";
+    public static String sendmsg = "sendmsg";
+    public static String getmsg = "getmsg";
+    public static String groupmsg = "groupmsg";
+    public static String sendgroupmsg = "sendgroupmsg";
+    public static String getgroupmsg = "getgroupmsg";
+    public static String categorylist = "categorylist";
+    public static String getbook = "getbook";
+    public static String saveform = "saveform";
+    public static String getstocklist = "getstocklist";
+    public static String getrecentrecords = "getrecentrecords";
+    public static String newcustomertype = "newcustomertype";
+    public static String updaterecords = "updaterecords";
+    public static String updateorders = "updateorders";
+    public static String viewstockdetails = "viewstockdetails";
 
     public static String imagePath = "https://digimaria.info/Track/uploads/track_user/";
     public static String expImagePath = "https://digimaria.info/Track/uploads/expense/";
