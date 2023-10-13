@@ -54,7 +54,7 @@ public class ViewStockActivity extends AppCompatActivity {
     String str_result = "", str_message = "";
     ArrayList<Stock> listValue = new ArrayList<Stock>();
 
-    String documentNo = "", orderIndex= "";
+    String documentNo = "", orderIndex= "", orderDate ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class ViewStockActivity extends AppCompatActivity {
         Intent intent = getIntent();
         documentNo = intent.getStringExtra("documentNo");
         orderIndex = intent.getStringExtra("orderIndex");
+        orderDate = intent.getStringExtra("orderDate");
 
         utilis = new Utilis(ViewStockActivity.this);
         mPrefs = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
@@ -234,6 +235,7 @@ public class ViewStockActivity extends AppCompatActivity {
             holder.tvCategory.setText(arrayList.get(position).getCategoryName());
             holder.tvBook.setText(arrayList.get(position).getBookName());
             holder.tvSchool.setText(documentNo);
+            holder.tvOrderDate.setText(orderDate);
 
         }
 
@@ -244,7 +246,7 @@ public class ViewStockActivity extends AppCompatActivity {
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDateTime, tvSchool, tvBook, tvQty, tvCategory, tvShipAddress, tvBookingPlace;
+        TextView tvDateTime, tvSchool, tvBook, tvQty, tvCategory, tvShipAddress, tvBookingPlace, tvOrderDate;
         LinearLayout layShipAddress, layBookingPlace, layCategory, layBook, layNoOfBook, layView;
 
         public ViewHolder(@NonNull View view) {
@@ -256,6 +258,7 @@ public class ViewStockActivity extends AppCompatActivity {
             tvQty = view.findViewById(R.id.tv_qty);
             tvShipAddress = view.findViewById(R.id.tv_ship_address);
             tvBookingPlace = view.findViewById(R.id.tv_booking_place);
+            tvOrderDate = view.findViewById(R.id.tv_order_date);
             layShipAddress = view.findViewById(R.id.lay_ship_address);
             layBookingPlace = view.findViewById(R.id.lay_booking_place);
             layCategory = view.findViewById(R.id.lay_category);

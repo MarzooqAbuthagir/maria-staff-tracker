@@ -1,5 +1,6 @@
 package Com.mariapublishers.mariaexecutive;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -177,7 +181,7 @@ public class AddSpecimenActivity extends AppCompatActivity {
                 } else if (strToDate.isEmpty()) {
                     Toast.makeText(AddSpecimenActivity.this, "Select Dispatch Date", Toast.LENGTH_SHORT).show();
                 } else if (strTransport.isEmpty()) {
-                    Toast.makeText(AddSpecimenActivity.this, "Enter Transport", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddSpecimenActivity.this, "Enter Transport (Courier)", Toast.LENGTH_SHORT).show();
                 } else if (specimenDataArrayList.size() == 0) {
                     Toast.makeText(AddSpecimenActivity.this, "Add Specimen Book Details", Toast.LENGTH_SHORT).show();
                 } else {
@@ -519,18 +523,18 @@ public class AddSpecimenActivity extends AppCompatActivity {
                             postSpecimenArrayListData(docNum, orderIndex);
 
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AddSpecimenActivity.this);
-                            builder.setMessage("Your request has been placed successfully. And your Specimen document no is " + obj.getString("orderNum"))
-                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            back();
-                                        }
-                                    });
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                            Button btnOk = alert.getButton(DialogInterface.BUTTON_NEUTRAL);
-                            btnOk.setTextColor(Color.parseColor("#000000"));
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(AddSpecimenActivity.this);
+//                            builder.setMessage("Your request has been placed successfully. And your Specimen document no is " + obj.getString("orderNum"))
+//                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            dialog.dismiss();
+//                                            back();
+//                                        }
+//                                    });
+//                            AlertDialog alert = builder.create();
+//                            alert.show();
+//                            Button btnOk = alert.getButton(DialogInterface.BUTTON_NEUTRAL);
+//                            btnOk.setTextColor(Color.parseColor("#000000"));
 
                         } else {
                             Toast.makeText(AddSpecimenActivity.this, "Try again later", Toast.LENGTH_SHORT).show();
@@ -822,25 +826,53 @@ public class AddSpecimenActivity extends AppCompatActivity {
                                 SchoolData bookData = new SchoolData(
                                         jsonObject.getString("bookId"),
                                         jsonObject.getString("bookName"),
-                                        jsonObject.getString("rupees"));
+                                        jsonObject.getString("rupees"),
+                                        "0");
 
                                 bookListValue.add(bookData);
                             }
 
-                            SchoolData initSchoolData = new SchoolData();
-                            initSchoolData.setId("-1");
-                            initSchoolData.setName("Book Name");
-                            bookListValue.add(0, initSchoolData);
-
-                            bookSpinnerValue.clear();
-                            for (int i = 0; i < bookListValue.size(); i++) {
-                                bookSpinnerValue.add(bookListValue.get(i).getName());
+                            System.out.println("book id spec "+ specimenDataArrayList.size());
+                            for (int a = 0; a < specimenDataArrayList.size(); a++) {
+                                if (strCategoryId.equalsIgnoreCase(specimenDataArrayList.get(a).getCategoryID())) {
+                                    for (int b = 0; b < bookListValue.size(); b++) {
+                                        SchoolData bookData;
+                                        System.out.println("book id temp "+ bookListValue.get(b).getId());
+                                        System.out.println("book id spec "+ specimenDataArrayList.get(a).getBookID());
+                                        if (bookListValue.get(b).getId().equalsIgnoreCase(specimenDataArrayList.get(a).getBookID())) {
+                                            System.out.println("book id spec equals "+ specimenDataArrayList.get(a).getNoOfBooks());
+                                            bookData = new SchoolData(
+                                                    bookListValue.get(b).getId(),
+                                                    bookListValue.get(b).getName(),
+                                                    bookListValue.get(b).getPrice(),
+                                                    specimenDataArrayList.get(a).getNoOfBooks());
+                                            System.out.println("book id equals");
+                                            bookListValue.remove(b);
+                                            bookListValue.add(b, bookData);
+                                        }
+                                    }
+                                }
                             }
 
-                            ArrayAdapter arrayAdapter = new ArrayAdapter(AddSpecimenActivity.this, R.layout.spinner_item, bookSpinnerValue);
-                            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            //Setting the ArrayAdapter data on the Spinner
-                            spinBook.setAdapter(arrayAdapter);
+//                            SchoolData initSchoolData = new SchoolData();
+//                            initSchoolData.setId("-1");
+//                            initSchoolData.setName("Book Name");
+//                            bookListValue.add(0, initSchoolData);
+//
+//                            bookSpinnerValue.clear();
+//                            for (int i = 0; i < bookListValue.size(); i++) {
+//                                bookSpinnerValue.add(bookListValue.get(i).getName());
+//                            }
+//
+//                            ArrayAdapter arrayAdapter = new ArrayAdapter(AddSpecimenActivity.this, R.layout.spinner_item, bookSpinnerValue);
+//                            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                            //Setting the ArrayAdapter data on the Spinner
+//                            spinBook.setAdapter(arrayAdapter);
+
+                            recyclerViewBook.setVisibility(View.VISIBLE);
+
+                            bookAdapter = new BookAdapter(AddSpecimenActivity.this, bookListValue);
+                            recyclerViewBook.setAdapter(bookAdapter);
 
                         } else if (Integer.parseInt(str_result) == 2) {
                             str_message = obj.getString("message");
@@ -1017,6 +1049,8 @@ public class AddSpecimenActivity extends AppCompatActivity {
     EditText qtyEt, totAmtEt;
     SearchableSpinner spinBook, spinCategory;
     ArrayList<SpecimenData> specimenDataArrayList = new ArrayList<>();
+    RecyclerView recyclerViewBook;
+    BookAdapter bookAdapter;
 
     private void addSpecimenDialog() {
         final Dialog dialog = new Dialog(AddSpecimenActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
@@ -1031,6 +1065,21 @@ public class AddSpecimenActivity extends AppCompatActivity {
         qtyEt = dialog.findViewById(R.id.et_qty);
         spinBook = dialog.findViewById(R.id.spin_book);
         spinCategory = dialog.findViewById(R.id.spin_category);
+        recyclerViewBook = dialog.findViewById(R.id.recycler_view_book);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AddSpecimenActivity.this);
+        recyclerViewBook.setHasFixedSize(true);
+        recyclerViewBook.setNestedScrollingEnabled(false);
+        recyclerViewBook.setLayoutManager(layoutManager);
+
+        recyclerViewBook.addItemDecoration(new DividerItemDecoration(AddSpecimenActivity.this, DividerItemDecoration.VERTICAL));
+
+        // Get drawable object
+        Drawable mDivider = ContextCompat.getDrawable(AddSpecimenActivity.this, R.drawable.divider_line);
+        // Create a DividerItemDecoration whose orientation is Horizontal
+        DividerItemDecoration hItemDecoration = new DividerItemDecoration(AddSpecimenActivity.this,
+                DividerItemDecoration.VERTICAL);
+        // Set the drawable on it
+        hItemDecoration.setDrawable(mDivider);
 
         spinCategory.setTitle("Select Category");
         spinBook.setTitle("Select Book");
@@ -1087,6 +1136,8 @@ public class AddSpecimenActivity extends AppCompatActivity {
                     //Setting the ArrayAdapter data on the Spinner
                     spinBook.setAdapter(arrayAdapter);
                     spinBook.setSelection(0);
+
+                    recyclerViewBook.setVisibility(View.GONE);
                 }
             }
 
@@ -1150,28 +1201,29 @@ public class AddSpecimenActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String noOfBooks = qtyEt.getText().toString();
-                if (strCategoryId.isEmpty()) {
-                    Toast.makeText(AddSpecimenActivity.this, "Select Category", Toast.LENGTH_SHORT).show();
-                } else if (strBookID.isEmpty()) {
-                    Toast.makeText(AddSpecimenActivity.this, "Select Book Name", Toast.LENGTH_SHORT).show();
-                } else if (noOfBooks.isEmpty()) {
-                    Toast.makeText(AddSpecimenActivity.this, "Enter no. of Books", Toast.LENGTH_SHORT).show();
-                } else if (Integer.parseInt(noOfBooks) == 0) {
-                    Toast.makeText(AddSpecimenActivity.this, "Entered no. of Books should be greater than zero", Toast.LENGTH_SHORT).show();
-                } else {
-                    SpecimenData specimenData = new SpecimenData(
-                            strCategoryId,
-                            strCategoryName,
-                            strBookID,
-                            strBookName,
-                            noOfBooks,
-                            totAmtEt.getText().toString()
-                    );
-                    specimenDataArrayList.add(specimenData);
-                    specimenAdapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                }
+//                String noOfBooks = qtyEt.getText().toString();
+//                if (strCategoryId.isEmpty()) {
+//                    Toast.makeText(AddSpecimenActivity.this, "Select Category", Toast.LENGTH_SHORT).show();
+//                } else if (strBookID.isEmpty()) {
+//                    Toast.makeText(AddSpecimenActivity.this, "Select Book Name", Toast.LENGTH_SHORT).show();
+//                } else if (noOfBooks.isEmpty()) {
+//                    Toast.makeText(AddSpecimenActivity.this, "Enter no. of Books", Toast.LENGTH_SHORT).show();
+//                } else if (Integer.parseInt(noOfBooks) == 0) {
+//                    Toast.makeText(AddSpecimenActivity.this, "Entered no. of Books should be greater than zero", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    SpecimenData specimenData = new SpecimenData(
+//                            strCategoryId,
+//                            strCategoryName,
+//                            strBookID,
+//                            strBookName,
+//                            noOfBooks,
+//                            totAmtEt.getText().toString()
+//                    );
+//                    specimenDataArrayList.add(specimenData);
+//                    specimenAdapter.notifyDataSetChanged();
+//                    dialog.dismiss();
+//                }
+                dialog.dismiss();
             }
         });
 
@@ -1264,5 +1316,217 @@ public class AddSpecimenActivity extends AppCompatActivity {
 
     public interface OnItemDeleteClickListener {
         void onItemDeleteClick(View view, int position);
+    }
+
+    private class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
+        Activity mActivity;
+        private ArrayList<SchoolData> arrayList;
+
+        public BookAdapter(Activity activity, ArrayList<SchoolData> bookListValue) {
+            setHasStableIds(true);
+            this.mActivity = activity;
+            this.arrayList = bookListValue;
+        }
+
+        @Override
+        public void onViewRecycled(@NonNull BookViewHolder holder) {
+            super.onViewRecycled(holder);
+        }
+
+        @NonNull
+        @Override
+        public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent, false);
+            return new BookViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final BookViewHolder holder, final int position) {
+            holder.setIsRecyclable(false);
+
+            if (arrayList.get(position).getName().startsWith(" ")) {
+                holder.tvBookName.setText(arrayList.get(position).getName().replace(" ", ""));
+            } else {
+                holder.tvBookName.setText(arrayList.get(position).getName());
+            }
+
+            holder.etQty.setText(arrayList.get(position).getQty());
+
+            holder.btnDec.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int qty = holder.etQty.getText().toString().isEmpty() ? 0 : Integer.parseInt(holder.etQty.getText().toString());
+                    if (qty == 0 || holder.etQty.getText().toString().isEmpty()) {
+
+                    } else {
+                        qty = qty - 1;
+                        holder.etQty.setText(qty + "");
+                        int totalAmount = qty * Integer.parseInt(arrayList.get(position).getPrice());
+                        saveList(
+                                strCategoryId,
+                                strCategoryName,
+                                arrayList.get(position).getId(),
+                                arrayList.get(position).getName(),
+                                holder.etQty.getText().toString(),
+                                String.valueOf(totalAmount)
+                        );
+                    }
+                }
+            });
+
+            holder.btnInc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int qty = holder.etQty.getText().toString().isEmpty() ? 0 : Integer.parseInt(holder.etQty.getText().toString());
+                    qty = qty + 1;
+                    holder.etQty.setText(qty + "");
+                    int totalAmount = qty * Integer.parseInt(arrayList.get(position).getPrice());
+                    saveList(
+                            strCategoryId,
+                            strCategoryName,
+                            arrayList.get(position).getId(),
+                            arrayList.get(position).getName(),
+                            holder.etQty.getText().toString(),
+                            String.valueOf(totalAmount)
+                    );
+                }
+            });
+
+            holder.etQty.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    String value = editable.toString();
+                    if (value.isEmpty()) {
+                        for (int i = 0; i < specimenDataArrayList.size(); i++) {
+                            if (specimenDataArrayList.get(i).getCategoryID().equalsIgnoreCase(strCategoryId) &&
+                                    specimenDataArrayList.get(i).getBookID().equalsIgnoreCase(arrayList.get(position).getId())) {
+                                specimenDataArrayList.remove(i);
+                                specimenAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+
+                        for (int j=0; j< bookListValue.size(); j++) {
+                            if (bookListValue.get(j).getId().equalsIgnoreCase(arrayList.get(position).getId())) {
+                                SchoolData bookData = new SchoolData(
+                                        bookListValue.get(j).getId(),
+                                        bookListValue.get(j).getName(),
+                                        bookListValue.get(j).getPrice(),
+                                        value);
+                                bookListValue.remove(j);
+                                bookListValue.add(j, bookData);
+                                break;
+                            }
+                        }
+                    } else if (!value.isEmpty() && Integer.parseInt(value) > 0) {
+                        int totalAmount = Integer.parseInt(value) * Integer.parseInt(arrayList.get(position).getPrice());
+                        saveList(
+                                strCategoryId,
+                                strCategoryName,
+                                arrayList.get(position).getId(),
+                                arrayList.get(position).getName(),
+                                holder.etQty.getText().toString(),
+                                String.valueOf(totalAmount)
+                        );
+                    } else if (!value.isEmpty() && Integer.parseInt(value) == 0) {
+                        for (int i = 0; i < specimenDataArrayList.size(); i++) {
+                            if (specimenDataArrayList.get(i).getCategoryID().equalsIgnoreCase(strCategoryId) &&
+                                    specimenDataArrayList.get(i).getBookID().equalsIgnoreCase(arrayList.get(position).getId())) {
+                                specimenDataArrayList.remove(i);
+                                specimenAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+
+                        for (int j=0; j< bookListValue.size(); j++) {
+                            if (bookListValue.get(j).getId().equalsIgnoreCase(arrayList.get(position).getId())) {
+                                SchoolData bookData = new SchoolData(
+                                        bookListValue.get(j).getId(),
+                                        bookListValue.get(j).getName(),
+                                        bookListValue.get(j).getPrice(),
+                                        value);
+                                bookListValue.remove(j);
+                                bookListValue.add(j, bookData);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return arrayList.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return (long) position;
+        }
+    }
+
+    private void saveList(String strCategoryId, String strCategoryName, String bookId, String bookName, String qty, String amount) {
+        for (int i = 0; i < specimenDataArrayList.size(); i++) {
+            if (specimenDataArrayList.get(i).getCategoryID().equalsIgnoreCase(strCategoryId) &&
+                    specimenDataArrayList.get(i).getBookID().equalsIgnoreCase(bookId)) {
+                specimenDataArrayList.remove(i);
+                specimenAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+
+        for (int j=0; j< bookListValue.size(); j++) {
+            if (bookListValue.get(j).getId().equalsIgnoreCase(bookId)) {
+               SchoolData bookData = new SchoolData(
+                        bookListValue.get(j).getId(),
+                        bookListValue.get(j).getName(),
+                        bookListValue.get(j).getPrice(),
+                        qty);
+                bookListValue.remove(j);
+                bookListValue.add(j, bookData);
+               break;
+            }
+        }
+
+        if (Integer.parseInt(qty) > 0) {
+            SpecimenData specimenData = new SpecimenData(
+                    strCategoryId,
+                    strCategoryName,
+                    bookId,
+                    bookName,
+                    qty,
+                    amount
+            );
+            specimenDataArrayList.add(specimenData);
+            specimenAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class BookViewHolder extends RecyclerView.ViewHolder {
+        TextView tvBookName;
+        Button btnDec, btnInc;
+        EditText etQty;
+
+        public BookViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvBookName = itemView.findViewById(R.id.tv_book_name);
+            etQty = itemView.findViewById(R.id.et_qty);
+            btnDec = itemView.findViewById(R.id.btn_dec);
+            btnInc = itemView.findViewById(R.id.btn_inc);
+        }
     }
 }

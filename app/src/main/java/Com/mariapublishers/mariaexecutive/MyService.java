@@ -52,7 +52,7 @@ import static Com.mariapublishers.mariaexecutive.App.channelId;
 public class MyService extends Service implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     String TAG = "MyService";
 
-    public static final int notify = 30000;  //interval between two services(Here Service run every 30 seconds)
+    public static final int notify = 50000;  //interval between two services(Here Service run every 30 seconds)
 
     private Handler mHandler = new Handler();   //run on another Thread to avoid crash
     private Timer mTimer = null;    //timer handling

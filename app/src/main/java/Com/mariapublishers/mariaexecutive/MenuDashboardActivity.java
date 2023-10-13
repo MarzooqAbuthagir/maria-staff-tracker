@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,6 +84,7 @@ public class MenuDashboardActivity extends AppCompatActivity {
             "Checking History",
             "Report",
             "Specimen",
+            "Attendance Checkout",
             "Logout"
     };
 
@@ -98,6 +98,7 @@ public class MenuDashboardActivity extends AppCompatActivity {
             R.mipmap.ic_history_round,
             R.mipmap.ic_report,
             R.mipmap.ic_spcimen_round,
+            R.mipmap.ic_attendance_checkout_round,
             R.mipmap.ic_logout_round,
     };
 
@@ -271,9 +272,203 @@ public class MenuDashboardActivity extends AppCompatActivity {
                         startActivity(new Intent(MenuDashboardActivity.this, StockActivity.class));
                         finish();
                         break;
+
+                    case "Attendance Checkout":
+                        isDashTimerRunning = false;
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MenuDashboardActivity.this);
+
+                        builder.setTitle("Confirmation")
+                                .setMessage("Are you sure want to Attendance Checkout?")
+                                        .setPositiveButton(MenuDashboardActivity.this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // Do nothing but close the dialog
+                                                dialog.dismiss();
+                                                getAttendance();
+                                            }
+                                        })
+                                        .setNegativeButton(MenuDashboardActivity.this.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // Do nothing
+                                                dialog.dismiss();
+                                            }
+                                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                        Button btn_yes = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+                        Button btn_no = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+                        btn_no.setTextColor(Color.parseColor("#000000"));
+                        btn_yes.setTextColor(Color.parseColor("#000000"));
+                        break;
                 }
             }
         });
+    }
+
+    UserInfo obj;
+
+    private void getAttendance() {
+        Gson gson = new Gson();
+        String json = mPrefs.getString("MyObject", "");
+        obj = gson.fromJson(json, UserInfo.class);
+
+
+        if (Utilis.isInternetOn()) {
+            Utilis.showProgress(MenuDashboardActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.checkattendancecheckout, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " getAttendance checkattendancecheckout response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " getAttendance checkattendancecheckout result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 1) {
+                            str_message = obj.getString("Message");
+
+                            Toast.makeText(MenuDashboardActivity.this, str_message, Toast.LENGTH_SHORT).show();
+
+                        } else if (Integer.parseInt(str_result) == 0) {
+
+                            str_message = obj.getString("Message");
+                            Toast.makeText(MenuDashboardActivity.this, "Already Marked as Attendance Checked out", Toast.LENGTH_SHORT).show();
+                        } else if (Integer.parseInt(str_result) == 2) {
+
+                            str_message = obj.getString("Message");
+                            toAttendanceCheckout();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MenuDashboardActivity.this, MenuDashboardActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+
+                    params.put("ExecutiveId", obj.getIndexId());
+
+                    System.out.println(TAG + " getAttendance checkattendancecheckout inputs " + params);
+                    return params;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        } else {
+            Toast.makeText(this, MenuDashboardActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void toAttendanceCheckout() {
+        if (Utilis.isInternetOn()) {
+            Utilis.showProgress(MenuDashboardActivity.this);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, Utilis.Api + Utilis.makeattendancecheckout, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    try {
+                        //converting response to json object
+                        JSONObject obj = new JSONObject(response);
+
+                        System.out.println(TAG + " toAttendanceCheckout response - " + response);
+
+                        Utilis.dismissProgress();
+
+                        str_result = obj.getString("errorCode");
+                        System.out.print(TAG + " toAttendanceCheckout result " + str_result);
+
+                        if (Integer.parseInt(str_result) == 0) {
+                            str_message = obj.getString("Message");
+                            Toast.makeText(MenuDashboardActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                        } else if (Integer.parseInt(str_result) == 2) {
+                            str_message = obj.getString("Message");
+                            Toast.makeText(MenuDashboardActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                        } else if (Integer.parseInt(str_result) == 1) {
+                            str_message = obj.getString("Message");
+                            Toast.makeText(MenuDashboardActivity.this, str_message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    Utilis.dismissProgress();
+                    Toast.makeText(MenuDashboardActivity.this, MenuDashboardActivity.this.getResources().getString(R.string.somethingwentwrong), Toast.LENGTH_SHORT).show();
+
+                    if (error instanceof NoConnectionError) {
+                        System.out.println("NoConnectionError");
+                    } else if (error instanceof TimeoutError) {
+                        System.out.println("TimeoutError");
+
+                    } else if (error instanceof ServerError) {
+                        System.out.println("ServerError");
+
+                    } else if (error instanceof AuthFailureError) {
+                        System.out.println("AuthFailureError");
+
+                    } else if (error instanceof NetworkError) {
+                        System.out.println("NetworkError");
+                    }
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+
+                    params.put("Userid", obj.getIndexId());
+
+                    System.out.println(TAG + " toAttendanceCheckout inputs " + params);
+                    return params;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        } else {
+            Toast.makeText(this, MenuDashboardActivity.this.getResources().getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getRunTimePermission() {

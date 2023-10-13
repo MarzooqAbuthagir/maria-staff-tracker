@@ -8,8 +8,9 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:background="#ffffff"
         android:gravity="center"
@@ -43,7 +44,17 @@
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="7dp" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_book"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:nestedScrollingEnabled="false"
+            android:scrollbars="vertical" />
+
         <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            android:visibility="gone"
             android:id="@+id/spin_book"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -51,6 +62,7 @@
             android:layout_marginEnd="5dp" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/et_qty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,6 +77,7 @@
             android:textColorHint="@android:color/black" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/et_total_amt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,7 +120,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:text="Add"
+                android:text="Ok"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 

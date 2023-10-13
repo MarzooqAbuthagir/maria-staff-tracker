@@ -275,7 +275,7 @@ public class CheckingHistoryActivity extends AppCompatActivity {
             if (arrayList.get(position).getCustomerType().equalsIgnoreCase("New Customer") ||
                     arrayList.get(position).getCustomerType().equalsIgnoreCase("Follow up")) {
 
-                String conPerNum ="";
+                String conPerNum = "";
                 String conType = "";
                 if (arrayList.get(position).getContactNumber() == null || arrayList.get(position).getContactNumber().equalsIgnoreCase("null")) {
                     conPerNum = "";
@@ -289,13 +289,16 @@ public class CheckingHistoryActivity extends AppCompatActivity {
                     conType = arrayList.get(position).getContactType();
                 }
 
-                if (conPerNum.isEmpty() || conType.isEmpty()) {
-                    holder.layEdit.setVisibility(View.VISIBLE);
-                } else {
-                    holder.layEdit.setVisibility(View.GONE);
-                }
+//                if (conPerNum.isEmpty() || conType.isEmpty()) {
+//                    holder.layEdit.setVisibility(View.VISIBLE);
+//                } else {
+//                    holder.layEdit.setVisibility(View.GONE);
+//                }
+                holder.layEdit.setVisibility(View.VISIBLE);
+                holder.layEditDup.setVisibility(View.VISIBLE);
             } else {
                 holder.layEdit.setVisibility(View.GONE);
+                holder.layEditDup.setVisibility(View.GONE);
             }
 
             if (arrayList.get(position).getIscheckout().equals("0")) {
@@ -325,135 +328,145 @@ public class CheckingHistoryActivity extends AppCompatActivity {
                         contactTypeStr = arrayList.get(position).getContactType();
                     }
 
-                    if (contactPersonNumStr.isEmpty() || contactTypeStr.isEmpty()) {
+                    if (arrayList.get(position).getCustomerType().equalsIgnoreCase("New Customer") ||
+                            arrayList.get(position).getCustomerType().equalsIgnoreCase("Follow up")) {
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CheckingHistoryActivity.this);
-                        builder.setMessage("Press Edit button to fill all required details before proceeding to checkout")
-                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                        Button btnOk = alert.getButton(DialogInterface.BUTTON_NEUTRAL);
-                        btnOk.setTextColor(Color.parseColor("#000000"));
+                        if (contactPersonNumStr.isEmpty() || contactTypeStr.isEmpty()) {
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(CheckingHistoryActivity.this);
+                            builder.setMessage("Press Edit button to fill all required details before proceeding to checkout")
+                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            Button btnOk = alert.getButton(DialogInterface.BUTTON_NEUTRAL);
+                            btnOk.setTextColor(Color.parseColor("#000000"));
+
+                        } else {
+                            proceedToCheckout();
+                        }
 
                     } else {
+                        proceedToCheckout();
+                    }
+                }
 
-                        final Dialog dialog = new Dialog(mActivity, android.R.style.Theme_Translucent_NoTitleBar);
+                private void proceedToCheckout() {
+                    final Dialog dialog = new Dialog(mActivity, android.R.style.Theme_Translucent_NoTitleBar);
 
-                        dialog.setCancelable(false);
-                        dialog.getWindow().setContentView(R.layout.check_out_alert_dialog);
-                        dialog.show();
+                    dialog.setCancelable(false);
+                    dialog.getWindow().setContentView(R.layout.check_out_alert_dialog);
+                    dialog.show();
 
-                        final EditText etAmount = dialog.findViewById(R.id.et_amt);
+                    final EditText etAmount = dialog.findViewById(R.id.et_amt);
 
 //                    final RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
 
-                        spinCallType = dialog.findViewById(R.id.spin_call_type);
-                        spinPayType = dialog.findViewById(R.id.spin_payment_type);
-                        spinDrivingType = dialog.findViewById(R.id.spin_driving_type);
+                    spinCallType = dialog.findViewById(R.id.spin_call_type);
+                    spinPayType = dialog.findViewById(R.id.spin_payment_type);
+                    spinDrivingType = dialog.findViewById(R.id.spin_driving_type);
 
 
-                        //Creating the ArrayAdapter instance having the country list
-                        ArrayAdapter callAdapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, callType);
-                        callAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        //Setting the ArrayAdapter data on the Spinner
-                        spinCallType.setAdapter(callAdapter);
+                    //Creating the ArrayAdapter instance having the country list
+                    ArrayAdapter callAdapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, callType);
+                    callAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    //Setting the ArrayAdapter data on the Spinner
+                    spinCallType.setAdapter(callAdapter);
 
 
-                        //Creating the ArrayAdapter instance having the country list
-                        ArrayAdapter payAdapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, payType);
-                        payAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        //Setting the ArrayAdapter data on the Spinner
-                        spinPayType.setAdapter(payAdapter);
+                    //Creating the ArrayAdapter instance having the country list
+                    ArrayAdapter payAdapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, payType);
+                    payAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    //Setting the ArrayAdapter data on the Spinner
+                    spinPayType.setAdapter(payAdapter);
 
-                        //Creating the ArrayAdapter instance having the country list
-                        ArrayAdapter drivingAdapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, drivingType);
-                        drivingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        //Setting the ArrayAdapter data on the Spinner
-                        spinDrivingType.setAdapter(drivingAdapter);
+                    //Creating the ArrayAdapter instance having the country list
+                    ArrayAdapter drivingAdapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, drivingType);
+                    drivingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    //Setting the ArrayAdapter data on the Spinner
+                    spinDrivingType.setAdapter(drivingAdapter);
 
-                        spinCallType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                selectedItemCallType = callType[i].toString();
-                                if (selectedItemCallType.equalsIgnoreCase("Select Call Type")) {
-                                    selectedItemCallType = "";
-                                }
+                    spinCallType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            selectedItemCallType = callType[i].toString();
+                            if (selectedItemCallType.equalsIgnoreCase("Select Call Type")) {
+                                selectedItemCallType = "";
                             }
+                        }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> adapterView) {
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
 
+                        }
+                    });
+
+                    spinPayType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            selectedItemPayType = payType[i].toString();
+                            if (selectedItemPayType.equalsIgnoreCase("Select Payment Type")) {
+                                selectedItemPayType = "";
                             }
-                        });
+                        }
 
-                        spinPayType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                selectedItemPayType = payType[i].toString();
-                                if (selectedItemPayType.equalsIgnoreCase("Select Payment Type")) {
-                                    selectedItemPayType = "";
-                                }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
+                    spinDrivingType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            selectedItemDrivingType = drivingType[i].toString();
+                            if (selectedItemDrivingType.equalsIgnoreCase("Select Driving Type")) {
+                                selectedItemDrivingType = "";
                             }
+                        }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> adapterView) {
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
 
-                            }
-                        });
+                        }
+                    });
 
-                        spinDrivingType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                selectedItemDrivingType = drivingType[i].toString();
-                                if (selectedItemDrivingType.equalsIgnoreCase("Select Driving Type")) {
-                                    selectedItemDrivingType = "";
-                                }
-                            }
+                    Button submitBtn = dialog.findViewById(R.id.submitbtn);
+                    Button cancelBtn = dialog.findViewById(R.id.cancelbtn);
+                    final EditText etDesc = dialog.findViewById(R.id.et_desc);
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> adapterView) {
-
-                            }
-                        });
-
-                        Button submitBtn = dialog.findViewById(R.id.submitbtn);
-                        Button cancelBtn = dialog.findViewById(R.id.cancelbtn);
-                        final EditText etDesc = dialog.findViewById(R.id.et_desc);
-
-                        submitBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String checkOutDesc = etDesc.getText().toString().trim();
+                    submitBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String checkOutDesc = etDesc.getText().toString().trim();
 //                            int selectedId = radioGroup.getCheckedRadioButtonId();
 //                            radioButton = (RadioButton) dialog.findViewById(selectedId);
-                                String collectionAmt = etAmount.getText().toString().trim();
+                            String collectionAmt = etAmount.getText().toString().trim();
 
 //                            if(selectedId==-1){
 //                                Toast.makeText(mActivity,"Select Type of Driving", Toast.LENGTH_SHORT).show();
 //                            }
-                                if (selectedItemDrivingType.isEmpty()) {
-                                    Toast.makeText(mActivity, "Select Type of Driving", Toast.LENGTH_SHORT).show();
-                                } else if (checkOutDesc.isEmpty()) {
-                                    Toast.makeText(mActivity, "Enter Description", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    checkOut(mActivity, arrayList.get(position).getCheckinId(), checkOutDesc, dialog, selectedItemCallType, selectedItemPayType, collectionAmt, selectedItemDrivingType); //radioButton.getText().toString());
-                                }
+                            if (selectedItemDrivingType.isEmpty()) {
+                                Toast.makeText(mActivity, "Select Type of Driving", Toast.LENGTH_SHORT).show();
+                            } else if (checkOutDesc.isEmpty()) {
+                                Toast.makeText(mActivity, "Enter Description", Toast.LENGTH_SHORT).show();
+                            } else {
+                                checkOut(mActivity, arrayList.get(position).getCheckinId(), checkOutDesc, dialog, selectedItemCallType, selectedItemPayType, collectionAmt, selectedItemDrivingType); //radioButton.getText().toString());
                             }
-                        });
+                        }
+                    });
 
-                        cancelBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog.cancel();
-                            }
-                        });
-
-                    }
+                    cancelBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.cancel();
+                        }
+                    });
                 }
+
             });
 
             holder.layEdit.setOnClickListener(new View.OnClickListener() {
@@ -770,7 +783,7 @@ public class CheckingHistoryActivity extends AppCompatActivity {
         TextView tvAddress, tvDateTime, tvName;
         LinearLayout layCheckout;
         Button btnCheckout;
-        LinearLayout layCheckoutView, layEdit;
+        LinearLayout layCheckoutView, layEdit, layEditDup;
         TextView tvState, tvCheckoutDateTime;
 
         public ViewHolder(@NonNull View view) {
@@ -784,6 +797,7 @@ public class CheckingHistoryActivity extends AppCompatActivity {
             tvState = view.findViewById(R.id.tv_state);
             tvCheckoutDateTime = view.findViewById(R.id.tv_checkout_date_time);
             layEdit = view.findViewById(R.id.lay_edit);
+            layEditDup = view.findViewById(R.id.lay_edit_dup);
             view.setTag(itemView);
         }
     }

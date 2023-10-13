@@ -9,9 +9,9 @@ public class Stock {
     String bookingDate;
     String trichyToDispatchDate;
 
-    String bookName, categoryName, totAmt, debit;
+    String bookName, categoryName, totAmt, debit, orderDate;
 
-    public Stock(String orderIndex, String documentNo, String orderNo, String shipAddress, String bookingPlace, String bookingDate, String trichyToDispatchDate) {
+    public Stock(String orderIndex, String documentNo, String orderNo, String shipAddress, String bookingPlace, String bookingDate, String trichyToDispatchDate, String orderDate) {
         this.orderIndex = orderIndex;
         this.documentNo = documentNo;
         this.orderNo = orderNo;
@@ -19,6 +19,7 @@ public class Stock {
         this.bookingPlace = bookingPlace;
         this.bookingDate = bookingDate;
         this.trichyToDispatchDate = trichyToDispatchDate;
+        this.orderDate = orderDate;
     }
 
     public Stock(String bookName, String categoryName, String totalAmount, String debit) {
@@ -114,5 +115,13 @@ public class Stock {
 
     public void setTrichyToDispatchDate(String trichyToDispatchDate) {
         this.trichyToDispatchDate = trichyToDispatchDate;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
     }
 }

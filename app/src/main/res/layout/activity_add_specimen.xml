@@ -140,7 +140,7 @@
                 android:layout_margin="10dp"
                 android:padding="10dp"
                 android:background="@drawable/shape_big_edittext"
-                android:hint="Transport"
+                android:hint="Transport (Courier)"
                 android:inputType="text"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black"

@@ -4,6 +4,7 @@ public class SchoolData {
     String id;
     String name;
     String price;
+    String qty;
 
     public SchoolData() {
     }
@@ -13,10 +14,11 @@ public class SchoolData {
         this.name = name;
     }
 
-    public SchoolData(String bookId, String bookName, String rupees) {
-       this.id = bookId;
-       this.name = bookName;
-       this.price = rupees;
+    public SchoolData(String bookId, String bookName, String rupees, String qty) {
+        this.id = bookId;
+        this.name = bookName;
+        this.price = rupees;
+        this.qty = qty;
     }
 
     public String getPrice() {
@@ -41,5 +43,13 @@ public class SchoolData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getQty() {
+        return qty;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
     }
 }

@@ -465,7 +465,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             finish();
         } else if (id == R.id.nav_attendance_checkout) {
             drawer.closeDrawers();
-            toAttendanceCheckout();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            builder.setTitle("Confirmation")
+                    .setMessage("Are you sure want to Attendance Checkout?")
+                    .setPositiveButton(MainActivity.this.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing but close the dialog
+                            dialog.dismiss();
+                            toAttendanceCheckout();
+                        }
+                    })
+                    .setNegativeButton(MainActivity.this.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+            Button btn_yes = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+            Button btn_no = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+            btn_no.setTextColor(Color.parseColor("#000000"));
+            btn_yes.setTextColor(Color.parseColor("#000000"));
         } else if (id == R.id.nav_Logout) {
             drawer.closeDrawers();
             toLogoutCustomer();
@@ -1039,6 +1068,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Map<String, String> params = new HashMap<>();
                     params.put("executiveId", obj.getIndexId());
                     params.put("customerName", cusName);
+                    System.out.println(TAG + " inputs getrecentrecords "+ params);
                     return params;
                 }
             };
@@ -1129,6 +1159,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Map<String, String> params = new HashMap<>();
                     params.put("latitude", String.valueOf(lat));
                     params.put("longitude", String.valueOf(lng));
+                    System.out.println(TAG + " getcheckincustomername inputs "+ params );
                     return params;
                 }
             };

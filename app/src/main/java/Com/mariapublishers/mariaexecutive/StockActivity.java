@@ -154,7 +154,8 @@ public class StockActivity extends AppCompatActivity {
                                         jsonObject.getString("shipAddress"),
                                         jsonObject.getString("bookingPlace"),
                                         jsonObject.getString("bookingDate"),
-                                        jsonObject.getString("trichyToDispatchDate"));
+                                        jsonObject.getString("trichyToDispatchDate"),
+                                        jsonObject.getString("orderDate"));
 
                                 listValue.add(leave);
 
@@ -254,6 +255,7 @@ public class StockActivity extends AppCompatActivity {
             holder.tvSchool.setText(arrayList.get(position).getDocumentNo());
             holder.tvShipAddress.setText(arrayList.get(position).getShipAddress());
             holder.tvBookingPlace.setText(arrayList.get(position).getBookingPlace());
+            holder.tvOrderDate.setText(arrayList.get(position).getOrderDate());
 
             holder.btnView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -261,6 +263,7 @@ public class StockActivity extends AppCompatActivity {
                     Intent iback = new Intent(StockActivity.this, ViewStockActivity.class);
                     iback.putExtra("documentNo", arrayList.get(position).getDocumentNo());
                     iback.putExtra("orderIndex", arrayList.get(position).getOrderIndex());
+                    iback.putExtra("orderDate", arrayList.get(position).getOrderDate());
                     iback.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(iback);
                     finish();
@@ -275,7 +278,7 @@ public class StockActivity extends AppCompatActivity {
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDateTime, tvSchool, tvBook, tvQty, tvCategory, tvShipAddress, tvBookingPlace;
+        TextView tvDateTime, tvSchool, tvBook, tvQty, tvCategory, tvShipAddress, tvBookingPlace, tvOrderDate;
         LinearLayout layShipAddress, layBookingPlace, layCategory, layBook, layNoOfBook, layView;
         Button btnView;
 
@@ -288,6 +291,7 @@ public class StockActivity extends AppCompatActivity {
             tvQty = view.findViewById(R.id.tv_qty);
             tvShipAddress = view.findViewById(R.id.tv_ship_address);
             tvBookingPlace = view.findViewById(R.id.tv_booking_place);
+            tvOrderDate = view.findViewById(R.id.tv_order_date);
             layShipAddress = view.findViewById(R.id.lay_ship_address);
             layBookingPlace = view.findViewById(R.id.lay_booking_place);
             layCategory = view.findViewById(R.id.lay_category);
